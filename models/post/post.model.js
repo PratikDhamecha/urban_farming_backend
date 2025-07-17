@@ -1,12 +1,11 @@
 const mongoose = require('mongoose');
 
-const growthEntrySchema = new mongoose.Schema({
+const postSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  plantName: String,
-  heightInCm: Number,
-  photoUrl: String,
-  recordedAt: Date,
-  notes: String
+  content: String,
+  imageUrls: [String],
+  createdAt: { type: Date, default: Date.now }
 });
-module.exports = mongoose.model('GrowthEntry', growthEntrySchema);
+module.exports = mongoose.model('Post', postSchema);
+
 
