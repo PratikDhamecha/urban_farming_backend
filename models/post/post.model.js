@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const postSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   content: String,
-  imageUrls: [String],
-  likes: { type: Number, default: 0 },
+  imageUrls: [String], // Array to store multiple image URLs
   type: String,
   createdAt: { type: Date, default: Date.now }
 });

@@ -2,7 +2,7 @@ const express = require('express');
 const UserController = require('../../controllers/user/user.controller');
 const router = express.Router();
 const verifyToken = require('../../middleware/middleware');
-const upload = require('../../Config/multer');
+const upload = require('../../middleware/multer.middleware');
 
 
 // Auth routes

@@ -9,7 +9,7 @@ class PostController {
             const post = req.body;
             if(req.file){
                 // If an image was uploaded, set the image URL
-                post.imageUrl = await uploadImage(req.file.path);
+                post.imageUrls.push(await uploadImage(req.file.path));
             }
             const newPost = await postService.createPost(post);
             return res.status(200).json(newPost);
