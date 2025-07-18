@@ -5,6 +5,7 @@ const postSchema = new mongoose.Schema({
   content: String,
   imageUrls: [String],
   likes: { type: Number, default: 0 },
+  type: String,
   createdAt: { type: Date, default: Date.now }
 });
 
