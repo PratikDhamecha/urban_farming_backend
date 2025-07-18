@@ -1,4 +1,5 @@
 const UserService = require('../../services/user/user.service');
+const uploadImage = require('../../services/cloudinary/clodinary.service');
 
 class UserController {
     // Get user profile
@@ -24,9 +25,9 @@ class UserController {
             const { userId } = req.params;
             const updateData = req.body;
 
-            // If an image was uploaded, set the avatar URL
             if (req.file) {
-                updateData.avatar = `/api/images/${req.file.filename}`;
+                // If an image was uploaded, set the avatar URL
+                updateData.avatar = await uploadImage(req.file.path);
             }
 
             const updatedUser = await UserService.updateUser(userId, updateData);
