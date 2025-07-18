@@ -18,9 +18,10 @@ class UserService {
             const newUser = new userModel({
                 ...userData,
                 password: hashedPassword
-            }); 
+            });
+            const token = jwt.sign({ user: newUser }, process.env.SECRET_KEY, { expiresIn: '24h' });
             await newUser.save();
-            return { message: 'User registered successfully', user: newUser };
+            return { message: 'User registered successfully', token };
         } catch (error) {
             throw new Error('Error registering user');
         }
@@ -36,7 +37,7 @@ class UserService {
             if (!isMatch) {
                 throw new Error('Invalid credentials');
             }
-            const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: '24h' });
+            const token = jwt.sign({ user }, process.env.SECRET_KEY, { expiresIn: '24h' });
             return { token };
         } catch (error) {
             throw new Error('Error logging in user');
