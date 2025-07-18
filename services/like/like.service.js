@@ -10,7 +10,17 @@ class LikeService {
             throw new Error('Error creating like');
         }
     }
-
+    static updateLike = async (likeId, likeData) => {
+        try {
+            const updatedLike = await likeModel.findByIdAndUpdate(likeId, likeData, { new: true });
+            if (!updatedLike) {
+                throw new Error('Like not found');
+            }
+            return { message: 'Like updated successfully', like: updatedLike };
+        } catch (error) {
+            throw new Error('Error updating like');
+        }
+    }
     static getLikesCountByPostId = async (postId) => {
         try {
             const likeCount = await likeModel.countDocuments({ postId });
@@ -19,6 +29,7 @@ class LikeService {
             throw new Error('Error fetching likes');
         }
     }
+
 }
 
 module.exports = LikeService;

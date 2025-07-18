@@ -2,9 +2,14 @@ const express = require('express');
 const upload = require('../Config/multer');
 const { getGFS } = require('../Config/gridfs');
 const router = express.Router();
+const dotenv = require('dotenv');
+const multer = require('multer');
 
-// Upload image
+
 router.post('/image', upload.single('image'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'No file uploaded' });
+  }
   res.json({
     fileId: req.file.id,
     url: `/api/images/${req.file.filename}`
@@ -29,4 +34,4 @@ router.get('/images/:filename', (req, res) => {
   });
 });
 
-module.exports = router; 
+module.exports = router;

@@ -55,6 +55,7 @@ class PostsService {
             throw new Error('Error fetching posts');
         }
     }
+
 }
 
 module.exports = PostsService;
