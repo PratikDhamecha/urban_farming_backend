@@ -22,6 +22,9 @@ class BadgeController {
         try {
             const { userId } = req.params;
             const badges = await BadgeService.getUserBadges(userId);
+
+            console.log(`User ${userId} badges:`, badges);
+            
             res.status(200).json({
                 success: true,
                 data: badges
