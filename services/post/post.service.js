@@ -52,15 +52,17 @@ class PostsService {
     static getAllPosts = async () => {
         try {
             const posts = await postsModel.find().populate("user",'name');
-            const data = posts.map(post => {
-                const comments = commentService.getCommentsByPostId(post._id);
-                const likesCount = likeService.getLikesCountByPostId(post._id);
+            const data = await Promise.all(posts.map(async post => {
+                const comments = await commentService.getCommentsByPostId(post._id);
+                const likesCount = await likeService.getLikesCountByPostId(post._id);
+                const timestamp = post.createdAt.toISOString().split('T')[0];
                 return {
                     ...post.toObject(),
                     comments: comments,
-                    likesCount: likesCount
+                    likesCount: likesCount,
+                    timestamp
                 };
-            });
+            }));
             return posts;
         } catch (error) {
             throw new Error('Error fetching posts');

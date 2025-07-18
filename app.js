@@ -5,6 +5,7 @@ const badgeRoutes = require('./routes/badge/badge.routes');
 const diagnosisRoutes = require('./routes/diagnosis/diagnosis.routes');
 const cors = require('cors');
 const app = express();
+const postRoutes = require('./routes/post/post.routes');
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -12,6 +13,7 @@ app.use(cors());
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/badges', badgeRoutes);
+app.use('/api/posts',postRoutes);
 app.use('/api/diagnosis', diagnosisRoutes);
 
 module.exports = app;
