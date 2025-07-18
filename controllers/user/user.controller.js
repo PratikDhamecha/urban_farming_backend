@@ -23,6 +23,12 @@ class UserController {
         try {
             const { userId } = req.params;
             const updateData = req.body;
+
+            // If an image was uploaded, set the avatar URL
+            if (req.file) {
+                updateData.avatar = `/api/images/${req.file.filename}`;
+            }
+
             const updatedUser = await UserService.updateUser(userId, updateData);
             res.status(200).json({
                 success: true,

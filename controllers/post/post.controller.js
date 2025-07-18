@@ -1,4 +1,4 @@
-const postService = require("../services/post/post.service");
+const postService = require("../../services/post/post.service");
 require("dotenv").config();
 
 exports.createPost = async (req, res) => {

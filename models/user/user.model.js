@@ -36,13 +36,7 @@ const userSchema = new mongoose.Schema({
   avatar: { 
     type: String, 
     default: '',
-    validate: {
-      validator: function(v) {
-        // Allow empty string or valid URL
-        return !v || /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i.test(v);
-      },
-      message: 'Avatar must be a valid image URL (jpg, jpeg, png, gif, webp)'
-    }
+    // Stores the image URL served from GridFS
   },
   level: { 
     type: String, 
