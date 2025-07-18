@@ -30,7 +30,6 @@ class DiagnosisController {
             res.status(500).json({ error: error.message });
         }
     }
-    static
 }
 
 module.exports = DiagnosisController;
