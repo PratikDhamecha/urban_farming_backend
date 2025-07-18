@@ -1,10 +1,16 @@
 const postService = require("../../services/post/post.service");
+const commentService = require("../../services/comment/comment.service");
+const uploadImage = require("../../services/cloudinary/clodinary.service");
 require("dotenv").config();
 
 class PostController {
     static createPost = async (req, res) => {
         try{
             const post = req.body;
+            if(req.file){
+                // If an image was uploaded, set the image URL
+                post.imageUrl = await uploadImage(req.file.path);
+            }
             const newPost = await postService.createPost(post);
             return res.status(200).json(newPost);
         }catch(error){
