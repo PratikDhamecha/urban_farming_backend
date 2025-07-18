@@ -1,4 +1,4 @@
-const express = require('express');
+const mongoose = require('mongoose');
 
 const growthEntrySchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
