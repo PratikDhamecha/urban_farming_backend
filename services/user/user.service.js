@@ -58,18 +58,52 @@ class UserService {
 
     static updateUser = async (userId, updateData) => {
         try {
-            const { password } = updateData;
-            if (password) {
-                const hashedPassword = await bcrypt.hash(password, 10);
-                updateData.password = hashedPassword;
+            // Validate userId
+            if (!userId) {
+                throw new Error('User ID is required');
             }
-            const user = await userModel.findByIdAndUpdate(userId, updateData, { new: true });
+
+            // Create a copy of updateData to avoid mutation
+            const dataToUpdate = { ...updateData };
+
+            // Hash password if provided
+            if (dataToUpdate.password) {
+                const hashedPassword = await bcrypt.hash(dataToUpdate.password, 10);
+                dataToUpdate.password = hashedPassword;
+            }
+
+            // Add updatedAt timestamp
+            dataToUpdate.updatedAt = new Date();
+
+            // Update user
+            const user = await userModel.findByIdAndUpdate(
+                userId,
+                dataToUpdate,
+                {
+                    new: true,
+                    runValidators: true, // Run model validations
+                    select: '-password' // Exclude password from returned data
+                }
+            );
+
             if (!user) {
                 throw new Error('User not found');
-            }
+            }   
+
             return user;
         } catch (error) {
-            throw new Error('Error fetching user');
+            // Log the actual error for debugging
+            console.error('Update user error:', error);
+
+            // Return more specific error messages
+            if (error.name === 'ValidationError') {
+                throw new Error(`Validation error: ${error.message}`);
+            }
+            if (error.name === 'CastError') {
+                throw new Error('Invalid user ID format');
+            }
+
+            throw new Error(`Error updating user: ${error.message}`);
         }
     }
 
@@ -100,7 +134,7 @@ class UserService {
             const posts = await postModel.countDocuments({ userId });
             const diagnoses = await diagnosisModel.countDocuments({ userId });
             const growthEntries = await growthModel.countDocuments({ userId });
-            
+
             // Calculate days active (simplified - you might want to track this differently)
             const daysSinceJoin = Math.floor((new Date() - user.createdAt) / (1000 * 60 * 60 * 24));
 
@@ -203,7 +237,7 @@ class UserService {
             const updateField = `stats.${statType}`;
             const user = await userModel.findByIdAndUpdate(
                 userId,
-                { 
+                {
                     $inc: { [updateField]: increment },
                     updatedAt: new Date()
                 },
