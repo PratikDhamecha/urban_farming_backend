@@ -1,6 +1,7 @@
 const postsModel = require('../../models/post/post.model');
 const commentService = require('../comment/comment.service');
 const likeService = require('../like/like.service');
+const userService = require('../user/user.service');
 
 class PostsService {
     static createPost = async (postData) => {
@@ -55,10 +56,24 @@ class PostsService {
             const data = posts.map(post => {
                 const comments = commentService.getCommentsByPostId(post._id);
                 const likesCount = likeService.getLikesCountByPostId(post._id);
+                const userDetails = userService.getUserById(post.userId);
+                if (!userDetails) {
+                    throw new Error('User not found');
+                }
+                post.user = {
+                    name: userDetails.name,
+                    avatar: userDetails.avatar,
+                    level: userDetails.level
+                };
                 return {
                     ...post.toObject(),
                     comments: comments,
-                    likesCount: likesCount
+                    likesCount: likesCount,
+                    user: {
+                        name: userDetails.name,
+                        avatar: userDetails.avatar,
+                        level: userDetails.level
+                    }
                 };
             });
             return posts;
@@ -66,8 +81,18 @@ class PostsService {
             throw new Error('Error fetching posts');
         }
     }
+    static  getUserNameAndAvtarAndLevel = async (userId) => {
+        try {
+            const user = await postsModel.findById(userId).select('name avatar level');
+            if (!user) {
+                throw new Error('User not found');
+            }
+            return user;
+        } catch (error) {
+            throw new Error('Error fetching user details');
+        }
+    }
 
 }
 
 module.exports = PostsService;
-// This service handles CRUD operations for posts.
