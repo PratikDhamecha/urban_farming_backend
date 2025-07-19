@@ -7,14 +7,15 @@ class PostController {
     static createPost = async (req, res) => {
         try{
             const post = req.body;
+            post.userId = req.user._id; // Set the userId from the token
             if(req.file){
                 // If an image was uploaded, set the image URL
-                post.imageUrls.push(await uploadImage(req.file.path));
+                post.imageUrls = await uploadImage(req.file.path);
             }
             const newPost = await postService.createPost(post);
             return res.status(200).json(newPost);
         }catch(error){
-            res.status(500).json({error:error});
+            res.status(500).json({error:error.message});
         }
     }
 

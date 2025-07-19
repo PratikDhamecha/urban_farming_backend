@@ -5,6 +5,7 @@ const likeService = require('../like/like.service');
 class PostsService {
     static createPost = async (postData) => {
         try {
+            console.log("Creating post with data:");
             const newPost = new postsModel(postData);
             await newPost.save();
             return { message: 'Post created successfully', post: newPost };
@@ -51,15 +52,17 @@ class PostsService {
 
     static getAllPosts = async () => {
         try {
-            const posts = await postsModel.find().populate("userId", 'name');
+            const posts = await postsModel.find().populate("userId").sort({createdAt : -1});
             const data = await Promise.all(
                 posts.map(async post => {
-                    const comments = await commentService.getCommentsCountByPostId(post._id);
+                    const commentsCount = await commentService.getCommentsCountByPostId(post._id);
+                    const comments = await commentService.getCommentsByPostId(post._id);
                     const likesCount = await likeService.getLikesCountByPostId(post._id);
                     const timestamp = post.createdAt ? post.createdAt.toISOString() : new Date().toISOString();
                     return {
                         ...post.toObject(),
                         comments: comments,
+                        commentsCount: commentsCount,
                         likesCount: likesCount,
                         timestamp
                     };

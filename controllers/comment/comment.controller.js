@@ -4,13 +4,13 @@ const UserController = require("../user/user.controller");
 class CommentController {
     static createComment = async (req, res) => {
         try{
-            const { postId, userId, content } = req.body;
+            const { postId, userId, text } = req.body;
 
-            if (!postId || !content) {
-                return res.status(400).json({ message: 'Post ID and content are required' });
+            if (!postId || !text) {
+                return res.status(400).json({ message: 'Post ID and text are required' });
             }
 
-            const newComment = await commentService.createComment({ postId, userId, content });
+            const newComment = await commentService.createComment({ postId, userId, text });
             res.status(201).json(newComment);
         }catch (error) {
             res.status(500).json({ message: 'Error creating comment', error: error.message });
@@ -30,6 +30,22 @@ class CommentController {
             res.status(500).json({ message: 'Error fetching comments', error: error.message });
         }
     }
+    
+    static getCommentById = async (req, res) => {
+        try {
+            const { commentId } = req.params;
+
+            if (!commentId) {
+                return res.status(400).json({ message: 'Comment ID is required' });
+            }
+
+            const comment = await commentService.getCommentById(commentId);
+            res.status(200).json(comment);
+        } catch (error) {
+            res.status(500).json({ message: 'Error fetching comment', error: error.message });
+        }
+    }
+
     static getCommentsCountByPostId = async (req, res) => {
         try {
             const { postId } = req.params;
@@ -57,7 +73,7 @@ class CommentController {
                 return res.status(404).json({ message: 'Comment not found' });
             }
 
-            res.status(200).json({ message: 'Comment deleted successfully', data: deletedComment });
+            res.status(200).json({status:true, message: 'Comment deleted successfully', data: deletedComment });
         } catch (error) {
             res.status(500).json({ message: 'Error deleting comment', error: error.message });
         }
