@@ -140,6 +140,11 @@ const userSchema = new mongoose.Schema({
       message: "Last active date cannot be in the future",
     },
   },
+  landSize : {
+    type: Number,
+    default: 0,
+    min: [0, "Land size cannot be negative"],
+  },
   isActive: {
     type: Boolean,
     default: true,
