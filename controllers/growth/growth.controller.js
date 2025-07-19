@@ -4,7 +4,7 @@ const uploadImage = require('../../services/cloudinary/clodinary.service');
 class GrowthController {
     static createGrowthEntry = async (req, res) => {
         try {
-            const { userId, plantName, type, trackingInterval } = req.body;
+            const { userId, plantName, type, trackingInterval, plantingDate, cultivatingDate } = req.body;
 
             const day = {
                 "weekly": 7,
@@ -17,7 +17,9 @@ class GrowthController {
                 plantName,
                 type,
                 trackingInterval,
-                nextDate: Date.now() + day[trackingInterval] * 24 * 60 * 60 * 1000
+                nextDate: Date.now() + day[trackingInterval] * 24 * 60 * 60 * 1000,
+                plantingDate: new Date(plantingDate),
+                cultivatingDate: cultivatingDate ? new Date(cultivatingDate) : null,
             });
 
             res.status(201).json(growthEntry);

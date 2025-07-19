@@ -19,7 +19,8 @@ router.get(
 
 // Profile routes
 router.get("/profile/:userId", verifyToken, UserController.getUserProfile);
-router.put("/profile/:userId", verifyToken, UserController.updateUserProfile);
+router.put("/profile/:userId", verifyToken, upload.single("image"), UserController.updateUserProfile);
+
 router.post(
   "/profile/:userId",
   verifyToken,
