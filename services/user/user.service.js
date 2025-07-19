@@ -25,7 +25,7 @@ class UserService {
       await newUser.save();
       return { message: "User registered successfully", token };
     } catch (error) {
-      throw new Error("Error registering user");
+      throw new Error("Error registering user" + error);
     }
   };
 

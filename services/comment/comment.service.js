@@ -3,21 +3,21 @@ const commentModel = require('../../models/comment/comment.model');
 class CommentService {
     static createComment = async (commentData) => {
         try {
-            const newComment = new commentModel(commentData);
-            await newComment.save();
-            return { message: 'Comment created successfully', comment: newComment };
+            const comment = new commentModel(commentData);
+            await comment.save();
+            return { message: 'Comment created successfully', comment: comment };
         } catch (error) {
-            throw new Error('Error creating comment');
+            throw new Error('Error creating comment'+error.message);
         }
     }
 
     static getCommentById = async (commentId) => {
         try {
-            const comment = await commentModel.findById(commentId);
+            const comment = await commentModel.findById(commentId).populate('userId');
             if (!comment) {
                 throw new Error('Comment not found');
             }
-            return comment;
+            return {status:true,comment};
         } catch (error) {
             throw new Error('Error fetching comment');
         }
