@@ -1,7 +1,6 @@
 const postService = require("../../services/post/post.service");
 const commentService = require("../../services/comment/comment.service");
 const uploadImage = require("../../services/cloudinary/clodinary.service");
-const userService = require("../../services/user/user.service");
 require("dotenv").config();
 
 class PostController {
@@ -10,7 +9,7 @@ class PostController {
             const post = req.body;
             if(req.file){
                 // If an image was uploaded, set the image URL
-                post.imageUrl = await uploadImage(req.file.path);
+                post.imageUrls.push(await uploadImage(req.file.path));
             }
             const newPost = await postService.createPost(post);
             return res.status(200).json(newPost);
@@ -20,16 +19,10 @@ class PostController {
     }
 
     static getAllPosts = async (req, res) => {
-        try {
+        try{
             let posts = await postService.getAllPosts();
-            const user = await userService.getUserById(req.user.id);
-            const userData = {
-                name: user.name,
-                avatar: user.avatar,
-                level: user.level
-            };
-            res.json({ status: true, success: "Posts fetched successfully", data: posts, user: userData });
-        } catch (error) {
+            res.json({status: true, success: "Posts fetched successfully", data: posts});
+        }catch(error){
             res.status(500).json({ message: error.message });
         }
     }
