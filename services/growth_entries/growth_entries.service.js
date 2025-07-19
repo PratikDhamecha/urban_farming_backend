@@ -1,11 +1,11 @@
-const growthEntriesModel = require('../../models/growth_entries/growth_entries.model');
+const growthEntriesModel = require('../../models/growth/growth.model');
 
 class GrowthEntriesService {
     static createGrowthEntry = async (entryData) => {
         try {
             const newEntry = new growthEntriesModel(entryData);
             await newEntry.save();
-            return { message: 'Growth entry created successfully', entry: newEntry };
+            return { message: 'Growth entry created successfully', entry: newEntry, success: true };
         } catch (error) {
             throw new Error('Error creating growth entry');
         }
@@ -47,9 +47,9 @@ class GrowthEntriesService {
         }
     }
 
-    static getAllGrowthEntries = async () => {
+    static getAllGrowthEntries = async (userId) => {
         try {
-            const entries = await growthEntriesModel.find();
+            const entries = await growthEntriesModel.find({ userId }).sort({ recordedAt: -1 }).lean();
             return entries;
         } catch (error) {
             throw new Error('Error fetching growth entries');
