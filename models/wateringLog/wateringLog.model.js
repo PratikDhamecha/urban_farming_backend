@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
+const express = require('express');
 
 const wateringLogSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   plantName: String,
   waterAmount: Number,
   wateredAt: Date,
-  notes: String,
+  notes: String
 });
-module.exports = mongoose.model("WateringLog", wateringLogSchema);
+module.exports = mongoose.model('WateringLog', wateringLogSchema);

@@ -10,25 +10,22 @@ router.post("/register", UserController.registerUser);
 router.post("/login", UserController.loginUser);
 
 // Admin routes
-router.get(
-  "/admin/users",
-  verifyToken,
-  verifyIsAdmin,
-  UserController.getAllUsers
-);
+router.get("/admin/users", verifyToken, verifyIsAdmin, UserController.getAllUsers);
 
 // Profile routes
 router.get("/profile/:userId", verifyToken, UserController.getUserProfile);
 router.put("/profile/:userId", verifyToken, UserController.updateUserProfile);
 router.post(
-  "/profile/:userId",
-  verifyToken,
-  upload.single("image"),
-  UserController.updateUserProfile
+  "/profile/:userId",
+  verifyToken,
+  upload.single("image"),  // for handling avatar uploads
+  UserController.updateUserProfile
 );
-// soft delete
+
+// Soft delete
 router.delete("/profile/:id", verifyToken, UserController.deleteUser);
-// XP and stats routes
+
+// XP and Stats
 router.post("/xp/:userId", verifyToken, UserController.addXP);
 router.post("/stats/:userId", verifyToken, UserController.updateUserStats);
 
