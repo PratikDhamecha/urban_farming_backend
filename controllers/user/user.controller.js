@@ -35,18 +35,20 @@ class UserController {
     }
   };
 
-  // Update user profile
+  // Update user profile (name, bio, location, and optional image upload)
   static updateUserProfile = async (req, res) => {
     try {
       const { userId } = req.params;
-      const updateData = req.body;
+      const updateData = { ...req.body };
 
       if (req.file) {
-        // If an image was uploaded, set the avatar URL
-        updateData.avatar = await uploadImage(req.file.path);
+        // Upload image and get Cloudinary URL
+        const uploadedAvatarUrl = await uploadImage(req.file.path);
+        updateData.avatar = uploadedAvatarUrl;
       }
 
       const updatedUser = await UserService.updateUser(userId, updateData);
+
       res.status(200).json({
         success: true,
         data: updatedUser,
