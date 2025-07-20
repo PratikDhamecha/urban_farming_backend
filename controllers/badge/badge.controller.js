@@ -1,4 +1,5 @@
 const BadgeService = require('../../services/badge/badge.service');
+const NotificationService = require('../../services/notification/notification.service');
 
 class BadgeController {
     // Get all available badges
@@ -48,6 +49,15 @@ class BadgeController {
                 data: result,
                 message: 'Badge awarded successfully'
             });
+
+            const notification = {
+                userId,
+                type: 'badge',
+                message: `You have been awarded the badge: ${result.name}`,
+                isRead: false
+            }
+            
+            await NotificationService.createNotification(notification);
         } catch (error) {
             res.status(400).json({
                 success: false,
