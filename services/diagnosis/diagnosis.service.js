@@ -1,8 +1,4 @@
-const diagnosisModel = require("../../models/diagnosis.model");
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const db = require("../../config/db");
+const diagnosisModel = require("../../models/diagnosis/diagnosis.model");
 
 class diagnosisService {
     static registerDiagnosis = async (diagnosisData) => {

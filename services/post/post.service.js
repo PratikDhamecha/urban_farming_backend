@@ -1,4 +1,6 @@
 const postsModel = require('../../models/post/post.model');
+const commentService = require('../comment/comment.service');
+const likeService = require('../like/like.service');
 
 class PostsService {
     static createPost = async (postData) => {
@@ -49,12 +51,25 @@ class PostsService {
 
     static getAllPosts = async () => {
         try {
-            const posts = await postsModel.find();
-            return posts;
+            const posts = await postsModel.find().populate("userId", 'name');
+            const data = await Promise.all(
+                posts.map(async post => {
+                    const comments = await commentService.getCommentsCountByPostId(post._id);
+                    const likesCount = await likeService.getLikesCountByPostId(post._id);
+                    const timestamp = post.createdAt ? post.createdAt.toISOString() : new Date().toISOString();
+                    return {
+                        ...post.toObject(),
+                        comments: comments,
+                        likesCount: likesCount,
+                        timestamp
+                    };
+                }));
+            return data;
         } catch (error) {
             throw new Error('Error fetching posts');
         }
     }
+
 }
 
 module.exports = PostsService;

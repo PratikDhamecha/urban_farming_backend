@@ -55,6 +55,24 @@ class CommentService {
             throw new Error('Error fetching comments');
         }
     }
+
+    static getCommentsByPostId = async (postId) => {
+        try {
+            const comments = await commentModel.find({ postId }).populate('userId', 'name');
+            return comments;
+        } catch (error) {
+            throw new Error('Error fetching comments');
+        }
+    }
+
+    static getCommentsCountByPostId = async (postId) => {
+        try {
+            const commentCount = await commentModel.countDocuments({ postId });
+            return commentCount;
+        } catch (error) {
+            throw new Error('Error fetching comments count');
+        }
+    }
 }
 
 module.exports = CommentService;
